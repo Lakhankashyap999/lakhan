@@ -1,0 +1,1609 @@
+/* ============================================
+   CINEMATIC VIEW — COMPLETE STYLESHEET
+   ============================================ */
+
+/* ---- Section 1: Base & Container ---- */
+.cine-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: clip;
+  background: #000;
+}
+
+body.cinematic-active {
+  overflow-x: hidden;
+}
+
+.cine-scene {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  contain: layout paint;
+}
+
+.cine-scene-bg {
+  position: absolute;
+  inset: -30px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+  will-change: transform;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  backface-visibility: hidden;
+  filter: contrast(1.05) saturate(1.1);
+  transform: translate3d(
+    calc(var(--cine-x, 0) * 14px),
+    calc(var(--cine-y, 0) * 14px),
+    0
+  ) scale(1.06);
+  transition: transform 0.12s ease-out;
+}
+
+.cine-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.cine-overlay-bottom {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.85) 0%,
+    rgba(0, 0, 0, 0.5) 30%,
+    rgba(0, 0, 0, 0.15) 60%,
+    transparent 100%
+  );
+}
+
+.cine-overlay-full {
+  background: linear-gradient(
+    to bottom,
+    rgba(5, 8, 18, 0.75) 0%,
+    rgba(5, 8, 18, 0.82) 40%,
+    rgba(5, 8, 18, 0.9) 100%
+  );
+}
+
+.cine-overlay-bottom-light {
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.2) 40%,
+    transparent 100%
+  );
+}
+
+/* ---- Section 2: Cinematic Navbar ---- */
+.cine-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent);
+  pointer-events: none;
+}
+
+.cine-navbar > * {
+  pointer-events: auto;
+}
+
+.cine-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.03em;
+}
+
+.cine-back-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.cine-scene-dots {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.cine-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  transition: all 0.4s ease;
+  cursor: pointer;
+}
+
+.cine-dot.active {
+  background: #fff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.7), 0 0 25px rgba(255, 255, 255, 0.3);
+  transform: scale(1.3);
+}
+
+/* ---- Section 3: Typography ---- */
+.cine-text-container {
+  position: relative;
+  z-index: 5;
+  padding: 40px 60px;
+  max-width: 900px;
+  width: 100%;
+}
+
+.cine-text-center {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cine-chapter {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 16px;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  will-change: opacity, transform;
+}
+
+.cine-chapter-gold {
+  color: #f59e0b;
+}
+
+.cine-title {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.1;
+  margin: 0 0 20px 0;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  will-change: opacity, transform, letter-spacing;
+}
+
+.cine-title-sm {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+.cine-subtitle {
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 300;
+  margin: 0 0 12px 0;
+  letter-spacing: 0.05em;
+  transition: opacity 0.6s ease;
+  will-change: opacity;
+}
+
+.cine-subtitle-bright {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cine-tagline {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+  letter-spacing: 0.03em;
+  transition: opacity 0.6s ease;
+  will-change: opacity;
+}
+
+/* ---- Section 4: Scene 01 — Rooftop Sunset ---- */
+.cine-scene-01 {
+  background: linear-gradient(135deg, #1a0533 0%, #2d1b4e 30%, #4a1942 60%, #1a0533 100%);
+}
+
+.cine-sun-rays {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(
+    ellipse at 50% 65%,
+    rgba(255, 165, 0, 0.12) 0%,
+    rgba(255, 107, 53, 0.06) 30%,
+    transparent 60%
+  );
+  animation: cine-pulse-rays 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.cine-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cine-particle {
+  position: absolute;
+  bottom: -10px;
+  background: rgba(255, 200, 100, 0.6);
+  border-radius: 50%;
+  animation: cine-float-up linear infinite;
+  will-change: transform;
+}
+
+.cine-scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: opacity 0.6s ease;
+}
+
+.cine-scroll-arrow {
+  animation: cine-bounce 2s ease-in-out infinite;
+  font-size: 1rem;
+}
+
+/* ---- Section 5: Scene 02 — Skills ---- */
+.cine-scene-02 {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+  min-height: 120vh;
+}
+
+.cine-skills-grid {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 1100px;
+  padding: 0 40px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.cine-skill-category-group {
+  will-change: opacity, transform;
+  transition: none;
+}
+
+.cine-skill-category {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #06b6d4;
+  margin-bottom: 14px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(6, 182, 212, 0.2);
+}
+
+.cine-skill-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.cine-skill-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  background: rgba(10, 16, 32, 0.95);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 12px;
+  min-width: 160px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.cine-skill-card:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+  transform: translateY(-2px);
+}
+
+.cine-skill-icon {
+  font-size: 1.35rem;
+  color: #38bdf8;
+  width: 26px;
+  text-align: center;
+}
+
+.cine-skill-name {
+  font-size: 0.95rem;
+  color: #ffffff;
+  font-weight: 600;
+  white-space: nowrap;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+.cine-proficiency-bar {
+  flex: 1;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 50px;
+}
+
+.cine-proficiency-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #818cf8);
+  border-radius: 3px;
+  transition: width 1.2s ease;
+}
+
+/* ---- Section 6: Scene 03 — Journey ---- */
+.cine-scene-03 {
+  background: linear-gradient(135deg, #1a0533 0%, #451a03 50%, #1a0533 100%);
+  min-height: 130vh;
+}
+
+.cine-petals {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cine-petal {
+  position: absolute;
+  top: -20px;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, #ec4899 0%, #f472b6 60%, transparent 100%);
+  border-radius: 50% 0 50% 0;
+  animation: cine-petal-fall linear infinite;
+  will-change: transform;
+  opacity: 0.6;
+}
+
+.cine-timeline {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 700px;
+  padding: 20px 40px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.cine-timeline::before {
+  content: '';
+  position: absolute;
+  left: 55px;
+  top: 20px;
+  bottom: 60px;
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, rgba(236, 72, 153, 0.4), transparent);
+}
+
+.cine-milestone {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  will-change: opacity, transform;
+  padding-left: 20px;
+}
+
+.cine-milestone-dot {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ec4899;
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+  margin-top: 6px;
+  position: relative;
+  z-index: 2;
+}
+
+.cine-milestone-card {
+  padding: 24px;
+  background: rgba(14, 10, 32, 0.95);
+  border: 1px solid rgba(244, 114, 182, 0.35);
+  border-radius: 14px;
+  flex: 1;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.7);
+  opacity: 1;
+}
+
+.cine-milestone-period {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #fbbf24;
+  margin-bottom: 6px;
+}
+
+.cine-milestone-company {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 4px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.cine-milestone-role {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #38bdf8;
+  margin: 0 0 12px;
+}
+
+.cine-milestone-desc {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 14px;
+}
+
+.cine-milestone-desc li {
+  font-size: 0.9rem;
+  color: #f1f5f9;
+  line-height: 1.6;
+  padding: 4px 0;
+  padding-left: 16px;
+  position: relative;
+  font-weight: 400;
+}
+
+.cine-milestone-desc li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: #f472b6;
+  font-weight: bold;
+}
+
+.cine-milestone-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cine-tech-badge {
+  padding: 4px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-radius: 50px;
+  background: rgba(6, 182, 212, 0.25);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.45);
+}
+
+.cine-badge-warm {
+  background: rgba(217, 119, 6, 0.25);
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.45);
+}
+
+/* ---- Section 7: Scene 04 — Projects ---- */
+.cine-scene-04 {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+  min-height: 120vh;
+}
+
+.cine-projects-grid {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 1000px;
+  padding: 0 40px 60px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.cine-project-card {
+  padding: 26px;
+  background: rgba(12, 16, 36, 0.95);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 16px;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.7);
+  opacity: 1;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.cine-project-card:hover {
+  border-color: #a855f7;
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.3), 0 0 60px rgba(56, 189, 248, 0.15);
+  transform: translateY(-3px);
+}
+
+.cine-project-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.cine-project-icon {
+  font-size: 1.5rem;
+  color: #c084fc;
+}
+
+.cine-project-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+}
+
+.cine-project-desc {
+  font-size: 0.92rem;
+  color: #f1f5f9;
+  line-height: 1.65;
+  margin: 0 0 14px;
+  font-weight: 400;
+}
+
+.cine-project-highlights {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+}
+
+.cine-project-highlights li {
+  font-size: 0.86rem;
+  color: #e2e8f0;
+  line-height: 1.55;
+  padding: 3px 0 3px 16px;
+  position: relative;
+}
+
+.cine-project-highlights li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #c084fc;
+  font-size: 1.1rem;
+}
+
+.cine-project-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.cine-project-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: rgba(6, 182, 212, 0.25);
+  border: 1px solid #06b6d4;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.cine-project-link:hover {
+  background: #06b6d4;
+  color: #000;
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+}
+
+/* ---- Section 8: Scene 05 — Education ---- */
+.cine-scene-05 {
+  background: linear-gradient(135deg, #451a03 0%, #78350f 50%, #451a03 100%);
+  min-height: 120vh;
+}
+
+.cine-sparkles {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cine-sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, #fbbf24 0%, rgba(251, 191, 36, 0) 70%);
+  border-radius: 50%;
+  animation: cine-sparkle-float ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.cine-edu-cards {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 900px;
+  padding: 0 40px 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.cine-edu-card {
+  padding: 26px;
+  background: rgba(36, 18, 8, 0.95);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 16px;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.7);
+  opacity: 1;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.cine-edu-card:hover {
+  border-color: #f59e0b;
+  transform: translateY(-2px);
+}
+
+.cine-edu-icon {
+  font-size: 1.8rem;
+  color: #fbbf24;
+  margin-bottom: 12px;
+}
+
+.cine-edu-degree {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 6px;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.cine-edu-institution {
+  font-size: 0.95rem;
+  color: #fef08a;
+  font-weight: 600;
+  margin: 0 0 6px;
+}
+
+.cine-edu-period {
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  margin: 0 0 10px;
+}
+
+.cine-edu-score {
+  font-size: 0.92rem;
+  color: #fbbf24;
+  font-weight: 700;
+  margin: 0 0 12px;
+}
+
+.cine-edu-score i {
+  margin-right: 6px;
+}
+
+.cine-edu-focus {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cine-certs {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 900px;
+  padding: 10px 40px 60px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+}
+
+.cine-cert-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 24px;
+  background: rgba(36, 18, 8, 0.95);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  opacity: 1;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.cine-cert-badge:hover {
+  border-color: #fbbf24;
+  box-shadow: 0 0 25px rgba(251, 191, 36, 0.3);
+  transform: translateY(-2px);
+}
+
+.cine-cert-badge i {
+  font-size: 1.8rem;
+  color: #fbbf24;
+}
+
+.cine-cert-badge span {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.cine-cert-badge small {
+  font-size: 0.8rem;
+  color: #e2e8f0;
+  font-weight: 500;
+}
+
+/* ---- Section 9: Scene 06 — Contact/Future ---- */
+.cine-scene-06 {
+  background: linear-gradient(135deg, #0c4a6e 0%, #1e3a5f 50%, #0c4a6e 100%);
+}
+
+.cine-light-rays {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(
+    ellipse at 50% 55%,
+    rgba(245, 158, 11, 0.1) 0%,
+    rgba(59, 130, 246, 0.05) 40%,
+    transparent 65%
+  );
+  animation: cine-pulse-rays 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.cine-contact-grid {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 700px;
+  padding: 10px 40px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  will-change: opacity;
+}
+
+.cine-contact-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-radius: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+}
+
+.cine-contact-card:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.1);
+  transform: translateY(-3px);
+}
+
+.cine-contact-card i {
+  font-size: 1.5rem;
+  color: #3b82f6;
+}
+
+.cine-contact-card span {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.cine-contact-card small {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.cine-exit-area {
+  position: relative;
+  z-index: 5;
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  will-change: opacity;
+}
+
+.cine-exit-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 30px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  color: #fff;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.03em;
+}
+
+.cine-exit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(59, 130, 246, 0.3);
+}
+
+/* ---- Section 10: Animations ---- */
+@keyframes cine-float-up {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate3d(20px, -100vh, 0) scale(0.5);
+    opacity: 0;
+  }
+}
+
+@keyframes cine-pulse-rays {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes cine-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}
+
+@keyframes cine-petal-fall {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translate3d(-40px, 100vh, 0) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+@keyframes cine-sparkle-float {
+  0%, 100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: translate3d(10px, -20px, 0) scale(1.2);
+  }
+}
+
+@keyframes cine-wind-sway {
+  0%, 100% {
+    transform: skewX(0deg) rotate(0deg);
+  }
+  25% {
+    transform: skewX(2deg) rotate(0.5deg);
+  }
+  75% {
+    transform: skewX(-1deg) rotate(-0.3deg);
+  }
+}
+
+/* Wind animation classes */
+.cine-wind-hair {
+  animation: cine-wind-sway 4s ease-in-out infinite;
+}
+
+.cine-wind-hair-moderate {
+  animation: cine-wind-sway 3s ease-in-out infinite;
+}
+
+.cine-wind-hair-strong {
+  animation: cine-wind-sway 2s ease-in-out infinite;
+}
+
+.cine-wind-cloth {
+  animation: cine-wind-sway 5s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+.cine-wind-cloth-moderate {
+  animation: cine-wind-sway 3.5s ease-in-out infinite;
+  animation-delay: 0.3s;
+}
+
+.cine-wind-cloth-strong {
+  animation: cine-wind-sway 2.5s ease-in-out infinite;
+  animation-delay: 0.2s;
+}
+
+.cine-wind-leaf {
+  animation: cine-wind-sway 6s ease-in-out infinite;
+  animation-delay: 1s;
+}
+
+.cine-wind-leaf-moderate {
+  animation: cine-wind-sway 4s ease-in-out infinite;
+  animation-delay: 0.5s;
+}
+
+.cine-wind-leaf-strong {
+  animation: cine-wind-sway 3s ease-in-out infinite;
+  animation-delay: 0.3s;
+}
+
+/* ---- Section 11: Transition Overlay ---- */
+.cine-transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+
+.cine-transition-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cine-transition-text {
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+/* ---- Section 12: Responsive ---- */
+@media (max-width: 768px) {
+  .cine-navbar {
+    padding: 12px 16px;
+  }
+
+  .cine-back-btn span {
+    display: none;
+  }
+
+  .cine-text-container {
+    padding: 30px 20px;
+  }
+
+  .cine-title {
+    font-size: clamp(1.8rem, 8vw, 3rem);
+  }
+
+  .cine-title-sm {
+    font-size: clamp(1.5rem, 6vw, 2.5rem);
+  }
+
+  .cine-skills-grid {
+    padding: 0 20px 40px;
+  }
+
+  .cine-skill-cards {
+    gap: 8px;
+  }
+
+  .cine-skill-card {
+    min-width: 120px;
+    padding: 8px 12px;
+  }
+
+  .cine-timeline {
+    padding: 20px 20px 40px;
+  }
+
+  .cine-timeline::before {
+    left: 35px;
+  }
+
+  .cine-milestone {
+    padding-left: 0;
+  }
+
+  .cine-projects-grid {
+    padding: 0 20px 40px;
+    grid-template-columns: 1fr;
+  }
+
+  .cine-edu-cards {
+    padding: 0 20px 20px;
+    grid-template-columns: 1fr;
+  }
+
+  .cine-certs {
+    padding: 10px 20px 40px;
+  }
+
+  .cine-contact-grid {
+    padding: 10px 20px;
+    grid-template-columns: 1fr;
+  }
+
+  .cine-scene-dots {
+    gap: 6px;
+  }
+
+  .cine-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .cine-scroll-indicator {
+    bottom: 24px;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cine-title {
+    font-size: clamp(1.5rem, 10vw, 2.5rem);
+  }
+
+  .cine-skill-card {
+    min-width: 100px;
+    gap: 6px;
+    padding: 6px 10px;
+  }
+
+  .cine-skill-name {
+    font-size: 0.75rem;
+  }
+
+  .cine-proficiency-bar {
+    display: none;
+  }
+
+  .cine-milestone-card {
+    padding: 14px;
+  }
+}
+
+/* ---- Section 13: Motion Preferences ---- */
+@media (prefers-reduced-motion: reduce) {
+  .cine-particle,
+  .cine-petal,
+  .cine-sparkle,
+  .cine-sun-rays,
+  .cine-light-rays,
+  .cine-scroll-arrow,
+  .cine-wind-hair,
+  .cine-wind-hair-moderate,
+  .cine-wind-hair-strong,
+  .cine-wind-cloth,
+  .cine-wind-cloth-moderate,
+  .cine-wind-cloth-strong,
+  .cine-wind-leaf,
+  .cine-wind-leaf-moderate,
+  .cine-wind-leaf-strong {
+    animation: none !important;
+  }
+
+  .cine-scene-bg {
+    transform: none !important;
+  }
+
+  .cine-transition-overlay {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   4K ATMOSPHERIC ENGINE: MOVING CLOUDS, WIND GUSTS & VOLUMETRIC GOD RAYS
+   ========================================================================== */
+
+/* ---- 4K Ultra-Crisp Sharpness Enhancements ---- */
+
+/* Pause off-screen scene animations to guarantee 60 FPS */
+.cine-scene:not(.is-active) * {
+  animation-play-state: paused !important;
+}
+
+/* ---- Section A: Photorealistic Volumetric Soft Clouds ---- */
+.cine-real-clouds {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 52%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.cine-cloud-drift-track {
+  position: absolute;
+  top: 0;
+  left: -20vw;
+  width: 140vw;
+  height: 100%;
+  will-change: transform;
+}
+
+.cine-track-slow {
+  animation: cineCloudPan 130s linear infinite;
+  opacity: 0.75;
+}
+
+.cine-track-mid {
+  animation: cineCloudPan 85s linear infinite;
+  animation-delay: -30s;
+  opacity: 0.85;
+}
+
+.cine-track-near {
+  animation: cineCloudPan 55s linear infinite;
+  animation-delay: -15s;
+  opacity: 0.9;
+}
+
+@keyframes cineCloudPan {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(30vw, 0, 0);
+  }
+}
+
+.cine-cloud-puff {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Sunset Cloud Colors (Warm amber, rose gold & twilight violet) */
+.cine-clouds-theme-sunset .puff-1 {
+  top: 15%;
+  left: 10%;
+  width: 320px;
+  height: 120px;
+  background: radial-gradient(ellipse at 50% 60%, rgba(251, 146, 60, 0.4) 0%, rgba(217, 70, 239, 0.18) 50%, transparent 75%);
+}
+
+.cine-clouds-theme-sunset .puff-2 {
+  top: 8%;
+  left: 45%;
+  width: 420px;
+  height: 140px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(254, 215, 170, 0.45) 0%, rgba(249, 115, 22, 0.22) 55%, transparent 75%);
+}
+
+.cine-clouds-theme-sunset .puff-3 {
+  top: 25%;
+  left: 70%;
+  width: 360px;
+  height: 110px;
+  background: radial-gradient(ellipse at 50% 60%, rgba(245, 158, 11, 0.35) 0%, rgba(168, 85, 247, 0.15) 50%, transparent 75%);
+}
+
+.cine-clouds-theme-sunset .puff-4 {
+  top: 4%;
+  left: 25%;
+  width: 280px;
+  height: 90px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(253, 224, 71, 0.35) 0%, transparent 70%);
+}
+
+.cine-clouds-theme-sunset .puff-5 {
+  top: 20%;
+  left: 20%;
+  width: 380px;
+  height: 130px;
+  background: radial-gradient(ellipse at 50% 60%, rgba(255, 255, 255, 0.4) 0%, rgba(251, 146, 60, 0.2) 55%, transparent 75%);
+}
+
+.cine-clouds-theme-sunset .puff-6 {
+  top: 14%;
+  left: 60%;
+  width: 440px;
+  height: 150px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(254, 240, 138, 0.45) 0%, rgba(236, 72, 153, 0.2) 60%, transparent 75%);
+}
+
+.cine-clouds-theme-sunset .puff-7 {
+  top: 28%;
+  left: 85%;
+  width: 300px;
+  height: 100px;
+  background: radial-gradient(ellipse at 50% 60%, rgba(251, 191, 36, 0.3) 0%, transparent 70%);
+}
+
+.cine-clouds-theme-sunset .puff-8 {
+  top: 32%;
+  left: 35%;
+  width: 500px;
+  height: 120px;
+  background: radial-gradient(ellipse at 50% 70%, rgba(255, 255, 255, 0.35) 0%, rgba(251, 146, 60, 0.15) 45%, transparent 70%);
+}
+
+.cine-clouds-theme-sunset .puff-9 {
+  top: 18%;
+  left: -5%;
+  width: 350px;
+  height: 110px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(254, 215, 170, 0.35) 0%, transparent 70%);
+}
+
+/* Sunrise Cloud Colors */
+.cine-clouds-theme-sunrise .puff-1,
+.cine-clouds-theme-sunrise .puff-2,
+.cine-clouds-theme-sunrise .puff-3,
+.cine-clouds-theme-sunrise .puff-4,
+.cine-clouds-theme-sunrise .puff-5,
+.cine-clouds-theme-sunrise .puff-6,
+.cine-clouds-theme-sunrise .puff-7,
+.cine-clouds-theme-sunrise .puff-8,
+.cine-clouds-theme-sunrise .puff-9 {
+  background: radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.5) 0%, rgba(254, 240, 138, 0.28) 45%, rgba(147, 197, 253, 0.12) 70%, transparent 80%);
+}
+
+/* Twilight Cloud Colors */
+.cine-clouds-theme-twilight .puff-1,
+.cine-clouds-theme-twilight .puff-2,
+.cine-clouds-theme-twilight .puff-3,
+.cine-clouds-theme-twilight .puff-4,
+.cine-clouds-theme-twilight .puff-5,
+.cine-clouds-theme-twilight .puff-6 {
+  background: radial-gradient(ellipse at 50% 50%, rgba(30, 41, 59, 0.55) 0%, rgba(6, 182, 212, 0.12) 50%, transparent 75%);
+}
+
+/* ---- Section B: Real Wind Engine (Natural Breeze Physics) ---- */
+.cine-real-wind {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 3;
+}
+
+/* Soft Atmospheric Breeze Waves (Transparent air currents) */
+.cine-breeze-wave {
+  position: absolute;
+  left: -50vw;
+  width: 70vw;
+  height: 80px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.04) 40%, rgba(255, 255, 255, 0.08) 60%, transparent 100%);
+  will-change: transform;
+  border-radius: 40px;
+}
+
+.cine-breeze-wave.wave-1 {
+  top: 30%;
+  animation: cineBreezeSweep 9s ease-in-out infinite;
+}
+
+.cine-breeze-wave.wave-2 {
+  top: 60%;
+  animation: cineBreezeSweep 12s ease-in-out infinite 4.5s;
+}
+
+@keyframes cineBreezeSweep {
+  0% {
+    transform: translate3d(0, 0, 0) scaleY(0.7);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  80% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate3d(160vw, -12px, 0) scaleY(1.3);
+    opacity: 0;
+  }
+}
+
+/* Wind-Carried Floating Airborne Motes with Undulating Natural Path */
+.cine-wind-air-motes {
+  position: absolute;
+  inset: 0;
+}
+
+.cine-air-mote {
+  position: absolute;
+  left: -20px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.75);
+  animation: cineNaturalBreeze linear infinite;
+  will-change: transform, opacity;
+}
+
+.cine-wind-theme-golden .cine-air-mote {
+  background: #fde047;
+}
+
+.cine-wind-theme-pink .cine-air-mote {
+  background: #f472b6;
+}
+
+.cine-wind-theme-cyan .cine-air-mote {
+  background: #38bdf8;
+}
+
+@keyframes cineNaturalBreeze {
+  0% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.85;
+  }
+  35% {
+    transform: translate3d(35vw, -16px, 0);
+  }
+  65% {
+    transform: translate3d(70vw, 10px, 0);
+  }
+  88% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate3d(115vw, -8px, 0);
+    opacity: 0;
+  }
+}
+
+/* ---- Section C: Soft Natural Sunlight & Radiance ---- */
+.cine-soft-sunlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.cine-sun-radiance {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(253, 224, 71, 0.45) 25%,
+    rgba(249, 115, 22, 0.15) 55%,
+    transparent 72%
+  );
+  animation: cineSunBreathe 5s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+.cine-sun-theme-sunrise .cine-sun-radiance {
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(254, 240, 138, 0.5) 25%,
+    rgba(147, 197, 253, 0.2) 60%,
+    transparent 75%
+  );
+}
+
+@keyframes cineSunBreathe {
+  0% {
+    transform: translate(-50%, -50%) scale(0.94);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.08);
+    opacity: 0.95;
+  }
+}
+
+.cine-sun-light-fan {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  transform: translate(-50%, 0);
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(254, 215, 170, 0.25) 0%,
+    rgba(251, 146, 60, 0.08) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+/* ---- Section D: Lightweight Scene Props ---- */
+.cine-sky-beacon {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ef4444;
+  animation: cineBeaconBlink 1.6s infinite;
+  z-index: 2;
+  pointer-events: none;
+}
+
+@keyframes cineBeaconBlink {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+.cine-city-twinkles {
+  position: absolute;
+  inset: 50% 0 0 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.cine-twinkle-light {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #fef08a;
+  border-radius: 50%;
+  animation: cineTwinkle 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes cineTwinkle {
+  0% { opacity: 0.2; }
+  100% { opacity: 0.9; }
+}
+
+.cine-holo-scanbeam {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+  animation: cineHoloScan 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 4;
+}
+
+@keyframes cineHoloScan {
+  0% { transform: translate3d(0, 0, 0); opacity: 0; }
+  15% { opacity: 0.8; }
+  85% { opacity: 0.8; }
+  100% { transform: translate3d(0, 100vh, 0); opacity: 0; }
+}
+
+.cine-lab-holo-node {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 1px dashed rgba(168, 85, 247, 0.35);
+  animation: cineHoloRotate 22s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes cineHoloRotate {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.cine-floating-book {
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+  animation: cineBookHover 6s ease-in-out infinite alternate;
+}
+
+@keyframes cineBookHover {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(0, -14px, 0) rotate(2deg); }
+  100% { transform: translate3d(0, -6px, 0) rotate(-1deg); }
+}
+
+.cine-morning-mist {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 35%;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+  animation: cineMistRoll 45s linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+@keyframes cineMistRoll {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
+}
+
+/* ============================================
+   100% CRYSTAL-CLEAR HIGH-CONTRAST VISIBILITY
+   ============================================ */
+.cine-text-container {
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+.cine-skill-card {
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+.cine-proficiency-fill {
+  width: var(--proficiency, 85%) !important;
+}
+
+.cine-milestone {
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+.cine-project-card {
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+.cine-edu-card {
+  opacity: 1 !important;
+  transform: translate3d(0, 0, 0) !important;
+}
+
+.cine-cert-badge {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+}
+
+.cine-contact-grid {
+  opacity: 1 !important;
+}
+
+.cine-exit-area {
+  opacity: 1 !important;
+}
