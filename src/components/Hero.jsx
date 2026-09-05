@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import lakhanPhoto from '../assets/lakhan.jpg';
 
 const phrases = [
-  'Full Stack Software Engineer',
-  'React.js & Node.js Specialist',
-  'REST & Microservices Architect',
-  'Distributed Systems Builder',
-  'High-Impact Web Platforms'
+  'Full Stack Engineer',
+  'React.js & Node Developer',
+  'MERN Stack Architect',
+  'Backend & API Specialist',
+  'Cloud Systems Builder'
 ];
 
 

@@ -16,6 +16,7 @@ const CustomCursor = () => {
     let isTouching = false;
     let isMouseDown = false;
     let fadeTimeout = null;
+    let lastTouchTime = 0;
 
     const clearFade = () => {
       if (fadeTimeout) {
@@ -26,6 +27,9 @@ const CustomCursor = () => {
 
     // Desktop Mouse Events
     const onMouseMove = (e) => {
+      // Ignore synthetic mousemove events triggered by mobile touch
+      if (Date.now() - lastTouchTime < 1000) return;
+
       clearFade();
       mouseX = e.clientX;
       mouseY = e.clientY;
@@ -37,13 +41,10 @@ const CustomCursor = () => {
         if (dotRef.current) dotRef.current.style.opacity = '1';
         if (ringRef.current) ringRef.current.style.opacity = '1';
       }
-
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
-      }
     };
 
     const onMouseLeave = () => {
+      if (Date.now() - lastTouchTime < 1000) return;
       clearFade();
       isVisible = false;
       if (dotRef.current) dotRef.current.style.opacity = '0';
@@ -51,11 +52,13 @@ const CustomCursor = () => {
     };
 
     const onMouseDown = () => {
+      if (Date.now() - lastTouchTime < 1000) return;
       isMouseDown = true;
       if (ringRef.current) ringRef.current.classList.add('cursor-clicked');
     };
 
     const onMouseUp = () => {
+      if (Date.now() - lastTouchTime < 1000) return;
       isMouseDown = false;
       if (ringRef.current) ringRef.current.classList.remove('cursor-clicked');
     };
@@ -63,11 +66,12 @@ const CustomCursor = () => {
     // Mobile / Touch Events
     const onTouchStart = (e) => {
       if (e.touches && e.touches.length > 0) {
+        lastTouchTime = Date.now();
         clearFade();
         const touchX = e.touches[0].clientX;
         const touchY = e.touches[0].clientY;
 
-        // Instantly snap ring and dot to touch location to prevent ANY swooping/jumping from top or off-screen!
+        // Instantly snap ring and dot to touch location
         mouseX = touchX;
         mouseY = touchY;
         ringX = touchX;
@@ -89,35 +93,42 @@ const CustomCursor = () => {
 
     const onTouchMove = (e) => {
       if (e.touches && e.touches.length > 0) {
+        lastTouchTime = Date.now();
         clearFade();
         isTouching = true;
         mouseX = e.touches[0].clientX;
         mouseY = e.touches[0].clientY;
-
-        if (dotRef.current) {
-          dotRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
-        }
       }
     };
 
     const onTouchEnd = () => {
+      lastTouchTime = Date.now();
       isTouching = false;
       if (ringRef.current) {
         ringRef.current.classList.remove('cursor-touch-active');
       }
       clearFade();
-      // Smooth fade out after finger is released
+      // Gentle fade out after finger is released
       fadeTimeout = setTimeout(() => {
         if (!isTouching) {
           isVisible = false;
           if (dotRef.current) dotRef.current.style.opacity = '0';
           if (ringRef.current) ringRef.current.style.opacity = '0';
         }
-      }, 700);
+      }, 450);
+    };
+
+    const onScroll = () => {
+      // If user scrolls on mobile and is not touching, hide the cursor immediately
+      if (Date.now() - lastTouchTime < 1200 && !isTouching) {
+        isVisible = false;
+        if (dotRef.current) dotRef.current.style.opacity = '0';
+        if (ringRef.current) ringRef.current.style.opacity = '0';
+      }
     };
 
     const onMouseOver = (e) => {
-      if (isTouching) return;
+      if (isTouching || Date.now() - lastTouchTime < 1000) return;
       const target = e.target;
       if (target.closest('.pro-project-card') || target.closest('.bento-tile') || target.closest('.degree-card')) {
         isHovering = true;
@@ -141,12 +152,16 @@ const CustomCursor = () => {
 
     let animId;
     const render = () => {
-      // Snappy and butter-smooth tracking: responsive on touch (0.42), smooth luxury on mouse
-      const ease = isTouching ? 0.42 : (isHovering ? 0.28 : 0.2);
+      // Snappy and butter-smooth tracking: responsive on touch (0.48), smooth luxury on mouse
+      const ease = isTouching ? 0.48 : (isHovering ? 0.28 : 0.2);
       ringX += (mouseX - ringX) * ease;
       ringY += (mouseY - ringY) * ease;
 
-      if (ringRef.current) {
+      if (dotRef.current && isVisible) {
+        dotRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+      }
+
+      if (ringRef.current && isVisible) {
         const scale = isTouching
           ? 1.2
           : isMouseDown
@@ -189,6 +204,7 @@ const CustomCursor = () => {
     window.addEventListener('mouseover', onMouseOver, { passive: true });
     window.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mouseup', onMouseUp);
+    window.addEventListener('scroll', onScroll, { passive: true });
     document.body.addEventListener('mouseleave', onMouseLeave);
 
     // Touch listeners
@@ -205,6 +221,7 @@ const CustomCursor = () => {
       window.removeEventListener('mouseover', onMouseOver);
       window.removeEventListener('mousedown', onMouseDown);
       window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener('scroll', onScroll);
       document.body.removeEventListener('mouseleave', onMouseLeave);
       window.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('touchmove', onTouchMove);
