@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 const TerminalCLI = ({ personal, skills, experience, projects }) => {
   const [input, setInput] = useState('');
@@ -6,10 +6,18 @@ const TerminalCLI = ({ personal, skills, experience, projects }) => {
     { type: 'system', text: '⚡ Welcome to Lakhan OS Terminal [v2.4.0]' },
     { type: 'system', text: 'Type "help" or click the quick pills below to explore.' }
   ]);
-  const bottomRef = useRef(null);
+  const terminalBodyRef = useRef(null);
+  const isFirstMount = useRef(true);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      return;
+    }
+    // Only scroll internal terminal container on commands, never scroll window!
+    if (terminalBodyRef.current) {
+      terminalBodyRef.current.scrollTop = terminalBodyRef.current.scrollHeight;
+    }
   }, [history]);
 
   const runCommand = (cmd) => {
@@ -115,13 +123,12 @@ const TerminalCLI = ({ personal, skills, experience, projects }) => {
         <div className="terminal-badge">LIVE REPL</div>
       </div>
 
-      <div className="terminal-body">
+      <div ref={terminalBodyRef} className="terminal-body">
         {history.map((line, idx) => (
           <div key={idx} className={`terminal-line ${line.type}`}>
             {line.text}
           </div>
         ))}
-        <div ref={bottomRef} />
 
         <form onSubmit={handleSubmit} className="terminal-input-form">
           <span className="prompt-symbol">lakhan@sys:~$</span>

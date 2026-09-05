@@ -73,7 +73,7 @@ const Hero = ({ personal, onEnterCinematic }) => {
               </div>
               <div className="status-badge-radar">
                 <span className="radar-dot"></span>
-                <span className="status-text">{personal.availability || 'Available for Full-time Roles'}</span>
+                <span className="status-text">{personal.availability || 'Available for Full-time'}</span>
               </div>
             </div>
 

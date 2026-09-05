@@ -8,7 +8,7 @@ export const portfolioData = {
         github: "https://github.com/Lakhankashyap999",
         linkedin: "https://www.linkedin.com/in/lakhan-kashyap-fullstack",
         location: "Delhi NCR, India",
-        availability: "Available for Full-time Roles",
+        availability: "Available for Full-time",
         about: "I am an engineering-driven Full Stack Developer with hands-on production experience at Shankrai Pvt Ltd and a master's background (MCA from AKTU). I bridge the gap between intuitive, silky-smooth React frontends and high-throughput, fault-tolerant Node.js & distributed database backends.",
         quote: "Code is like humor. When you have to explain it, it’s bad.",
         greeting: "const engineer = 'Lakhan Kashyap';",

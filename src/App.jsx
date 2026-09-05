@@ -26,7 +26,15 @@ function App() {
   const [viewMode, setViewMode] = useState('normal'); // 'normal' | 'cinematic'
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  // 1. Theme Management
+  // 1. Scroll Restoration: always start at top of page on refresh
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+  }, []);
+
+  // 2. Theme Management
   useEffect(() => {
     document.documentElement.className = `${theme}-theme`;
     document.documentElement.setAttribute('data-theme', theme);
@@ -82,6 +90,7 @@ function App() {
   const handleLoaderFinish = () => {
     setLoading(false);
     document.body.classList.remove('no-scroll');
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const handleEnterCinematic = () => {
