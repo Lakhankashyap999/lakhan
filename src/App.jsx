@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Lenis from 'lenis';
 import { portfolioData } from './data/portfolioData';
 import Loader from './components/Loader';
@@ -24,6 +24,7 @@ function App() {
     return localStorage.getItem('theme') || 'dark';
   });
   const [viewMode, setViewMode] = useState('normal'); // 'normal' | 'cinematic'
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   // 1. Theme Management
   useEffect(() => {
@@ -32,14 +33,32 @@ function App() {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
-  // 2. Lenis Ultra-Smooth Scrolling
+  // 2. Real-Time Scroll Progress (Mobile & Desktop)
   useEffect(() => {
+    const handleScroll = () => {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight > 0) {
+        const progress = Math.min(100, Math.max(0, (window.scrollY / docHeight) * 100));
+        setScrollProgress(progress);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // 3. Lenis Smooth Scrolling (Desktop only, native on mobile)
+  useEffect(() => {
+    const isMobile = window.innerWidth <= 768 || 'ontouchstart' in window;
+    if (isMobile) return;
+
     const lenis = new Lenis({
       duration: 0.85,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       wheelMultiplier: 1.0,
-      touchMultiplier: 1.2,
+      touchMultiplier: 1.0,
     });
 
     let rafId;
@@ -75,10 +94,20 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Render Cinematic View mode
   if (viewMode === 'cinematic') {
     return (
       <div className="portfolio-app-root cinematic-active-root">
+        {/* Top Scroll Indicator */}
+        <div
+          className="scroll-progress-bar-top"
+          style={{ width: `${scrollProgress}%` }}
+          aria-hidden="true"
+        />
         <CustomCursor />
         <CinematicView onExitCinematic={handleExitCinematic} />
       </div>
@@ -88,6 +117,13 @@ function App() {
   // Render Standard Portfolio mode
   return (
     <div className="portfolio-app-root">
+      {/* Real-Time Cyber Scroll Progress Bar across top */}
+      <div
+        className="scroll-progress-bar-top"
+        style={{ width: `${scrollProgress}%` }}
+        aria-hidden="true"
+      />
+
       {loading && <Loader onFinish={handleLoaderFinish} />}
       <CustomCursor />
       <BackgroundEffects />
@@ -137,6 +173,19 @@ function App() {
       </main>
 
       <Footer personal={portfolioData.personal} />
+
+      {/* Floating Interactive Scroll-To-Top Indicator */}
+      {scrollProgress > 4 && (
+        <button
+          className="scroll-floating-tracker"
+          onClick={scrollToTop}
+          title="Scroll to Top"
+          aria-label="Scroll to Top"
+        >
+          <span className="scroll-tracker-percent">{Math.round(scrollProgress)}%</span>
+          <i className="fas fa-arrow-up scroll-tracker-arrow"></i>
+        </button>
+      )}
     </div>
   );
 }

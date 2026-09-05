@@ -556,11 +556,21 @@ html[data-theme="light"] .navbar.scrolled {
   font-weight: 800;
 }
 
-.hero-subtitle-wrapper {
+.hero-subtitle-fixed-wrapper {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.65rem;
   margin-bottom: 1.4rem;
+  min-height: 3.2rem;
+  height: auto;
+  overflow: visible;
+}
+
+.hero-subtitle-box {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .code-tag {
@@ -568,16 +578,30 @@ html[data-theme="light"] .navbar.scrolled {
   font-size: 0.95rem;
   color: var(--accent);
   opacity: 0.8;
+  flex-shrink: 0;
 }
 
-.hero-subtitle {
+.typed-text {
   font-family: var(--font-heading);
-  font-size: clamp(1.2rem, 2.8vw, 2rem);
-  font-weight: 600;
-  color: var(--text-primary);
-  min-height: 2.4rem;
-  display: flex;
-  align-items: center;
+  font-size: clamp(1.15rem, 2.6vw, 1.85rem);
+  font-weight: 700;
+  color: var(--accent);
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.3;
+}
+
+.typing-caret {
+  font-family: var(--font-code);
+  font-size: 1.6rem;
+  color: var(--accent);
+  margin-left: 2px;
+  animation: blink-caret 0.9s infinite;
+}
+
+@keyframes blink-caret {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 .scramble-ghost {
@@ -2431,18 +2455,30 @@ footer {
   }
 
   .hero-subtitle-fixed-wrapper {
-    height: auto;
-    min-height: 2.8rem;
-    max-height: none;
-    flex-wrap: wrap;
-    gap: 0.4rem;
+    height: auto !important;
+    min-height: 4.6rem !important;
+    max-height: none !important;
+    overflow: visible !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 0.4rem !important;
     margin-bottom: 1.2rem;
   }
 
+  .hero-subtitle-box {
+    display: inline-flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
   .typed-text {
-    font-size: clamp(1rem, 4vw, 1.25rem);
-    white-space: normal;
-    word-break: break-word;
+    font-size: clamp(1.05rem, 4.2vw, 1.35rem) !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    line-height: 1.35 !important;
+    display: inline !important;
   }
 
   .code-tag {
@@ -2657,10 +2693,115 @@ footer {
     box-sizing: border-box;
   }
 
-  /* Contact Form Mobile Fixes */
-  .pro-contact-form {
-    padding: 1.4rem;
+  /* Let's Connect (Contact Section) Mobile Overhaul */
+  .contact-split-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    width: 100%;
+  }
+
+  .contact-panel-card {
+    padding: 1.3rem 1rem;
+    width: 100%;
     box-sizing: border-box;
+  }
+
+  .contact-panel-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .panel-intro-text {
+    font-size: 0.88rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .communication-channels-list {
+    gap: 0.85rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+  }
+
+  .channel-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.85rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .channel-icon-circle {
+    width: 38px;
+    height: 38px;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .channel-details {
+    flex: 1 1 calc(100% - 130px);
+    min-width: 0;
+    overflow: visible;
+  }
+
+  .channel-label {
+    font-size: 0.7rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .channel-value {
+    white-space: normal !important;
+    word-break: break-all !important;
+    overflow-wrap: anywhere !important;
+    text-overflow: clip !important;
+    font-size: 0.86rem !important;
+    line-height: 1.4;
+    display: block;
+  }
+
+  .copy-channel-btn {
+    padding: 0.3rem 0.65rem;
+    font-size: 0.72rem;
+    margin-left: auto;
+  }
+
+  .recruiter-availability-card {
+    padding: 1.1rem 0.9rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .recruiter-availability-card p {
+    font-size: 0.82rem;
+    line-height: 1.55;
+    word-break: break-word;
+  }
+
+  .pro-contact-form {
+    padding: 1.3rem 1rem;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .form-grid-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .pro-form-group {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .pro-form-group input,
+  .pro-form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.8rem;
+    font-size: 16px;
   }
 
   /* GitHub Activity Mobile Fixes */
@@ -2754,44 +2895,7 @@ html.lenis, html.lenis body {
   overflow: hidden;
 }
 
-/* Stable Hero Subtitle - ZERO Layout Shift */
-.hero-subtitle-fixed-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  margin-bottom: 1.4rem;
-  height: 3.2rem;
-  min-height: 3.2rem;
-  max-height: 3.2rem;
-  overflow: hidden;
-}
 
-.hero-subtitle-box {
-  display: flex;
-  align-items: center;
-  height: 100%;
-}
-
-.typed-text {
-  font-family: var(--font-heading);
-  font-size: clamp(1.15rem, 2.6vw, 1.85rem);
-  font-weight: 700;
-  color: var(--accent);
-  white-space: nowrap;
-}
-
-.typing-caret {
-  font-family: var(--font-code);
-  font-size: 1.6rem;
-  color: var(--accent);
-  margin-left: 2px;
-  animation: blink-caret 0.9s infinite;
-}
-
-@keyframes blink-caret {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
 
 /* Ultra-Smooth Hardware-Accelerated Custom Cursor */
 .cursor-dot-smooth {
@@ -3549,28 +3653,125 @@ html[data-theme="light"] .cyber-grid-static {
 }
 
 /* ==========================================================================
-   25. MOBILE TOUCH CURSOR SUPPRESSION
+   25. MOBILE TOUCH CURSOR INTERACTION
    ========================================================================== */
 @media (pointer: coarse), (max-width: 768px) {
-  .mouse-spotlight-gpu,
-  .cyber-cursor-dot,
-  .cyber-cursor-ring,
-  .cursor-dot-smooth,
-  .cursor-ring,
-  .cursor-inner-text {
+  .mouse-spotlight-gpu {
     display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
   }
 
   *, *::before, *::after, body, a, button, input, textarea, select {
     cursor: auto !important;
   }
+
+  .cyber-cursor-dot {
+    display: block !important;
+    visibility: visible !important;
+    width: 10px;
+    height: 10px;
+    margin-left: -5px;
+    margin-top: -5px;
+    pointer-events: none !important;
+    z-index: 9999999;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .cyber-cursor-ring {
+    display: flex !important;
+    visibility: visible !important;
+    width: 36px;
+    height: 36px;
+    margin-left: -18px;
+    margin-top: -18px;
+    pointer-events: none !important;
+    z-index: 9999998;
+    border: 1.5px solid rgba(0, 212, 255, 0.75);
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.08s ease-out;
+  }
+
+  .cursor-touch-active {
+    transform: scale(1.35) !important;
+    border-color: #38bdf8 !important;
+    box-shadow: 0 0 16px rgba(0, 212, 255, 0.7) !important;
+  }
+
+  .cyber-cursor-label {
+    display: none !important;
+  }
 }
 
 /* ==========================================================================
-   26. NETLIFY BADGE / DRAWER / FEEDBACK BANNER REMOVAL
+   26. REAL-TIME SCROLL PROGRESS BAR & FLOATING TRACKER
+   ========================================================================== */
+.scroll-progress-bar-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3.5px;
+  background: linear-gradient(90deg, #00d4ff 0%, #8b5cf6 50%, #ec4899 100%);
+  z-index: 100002;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.8), 0 0 18px rgba(139, 92, 246, 0.6);
+  pointer-events: none;
+  transition: width 0.08s linear;
+}
+
+.scroll-floating-tracker {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  z-index: 9999;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(13, 17, 23, 0.88);
+  border: 1.5px solid rgba(0, 212, 255, 0.6);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 212, 255, 0.25);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+  padding: 0;
+}
+
+.scroll-floating-tracker:hover {
+  transform: translateY(-3px) scale(1.08);
+  border-color: #00d4ff;
+  box-shadow: 0 6px 25px rgba(0, 212, 255, 0.45);
+}
+
+.scroll-tracker-percent {
+  font-family: var(--font-code);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #00d4ff;
+  line-height: 1;
+}
+
+.scroll-tracker-arrow {
+  font-size: 0.72rem;
+  color: #ffffff;
+  margin-top: 2px;
+}
+
+@media (max-width: 480px) {
+  .scroll-floating-tracker {
+    bottom: 18px;
+    right: 16px;
+    width: 42px;
+    height: 42px;
+  }
+}
+
+/* ==========================================================================
+   27. NETLIFY BADGE / DRAWER / FEEDBACK BANNER REMOVAL
    ========================================================================== */
 #netlify-drawer,
 #netlify-drawer-iframe,

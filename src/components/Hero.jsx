@@ -4,10 +4,11 @@ import lakhanPhoto from '../assets/lakhan.jpg';
 const phrases = [
   'Full Stack Software Engineer',
   'React.js & Node.js Specialist',
-  'RESTful & Microservices Architect',
-  'Distributed Systems Enthusiast',
-  'Building High-Impact Web Platforms'
+  'REST & Microservices Architect',
+  'Distributed Systems Builder',
+  'High-Impact Web Platforms'
 ];
+
 
 const Hero = ({ personal, onEnterCinematic }) => {
   const [displayText, setDisplayText] = useState('');

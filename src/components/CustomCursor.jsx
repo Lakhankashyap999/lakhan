@@ -1,43 +1,67 @@
-﻿import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 const CustomCursor = () => {
   const dotRef = useRef(null);
   const ringRef = useRef(null);
   const textRef = useRef(null);
-  const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
-    // Disable on touch screens (mobile/tablet)
-    if (window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window) {
-      setIsTouch(true);
-      return;
-    }
-
     let mouseX = -100;
     let mouseY = -100;
     let ringX = -100;
     let ringY = -100;
     let isHovering = false;
     let hoverType = '';
-    let isMouseDown = false;
+    let isVisible = false;
 
-    const onMouseMove = (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-
+    const setPosition = (x, y) => {
+      mouseX = x;
+      mouseY = y;
+      if (!isVisible) {
+        isVisible = true;
+        if (dotRef.current) dotRef.current.style.opacity = '1';
+        if (ringRef.current) ringRef.current.style.opacity = '1';
+      }
       if (dotRef.current) {
         dotRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
       }
     };
 
+    // Desktop Mouse Events
+    const onMouseMove = (e) => {
+      setPosition(e.clientX, e.clientY);
+    };
+
     const onMouseDown = () => {
-      isMouseDown = true;
       if (ringRef.current) ringRef.current.classList.add('cursor-clicked');
     };
 
     const onMouseUp = () => {
-      isMouseDown = false;
       if (ringRef.current) ringRef.current.classList.remove('cursor-clicked');
+    };
+
+    // Mobile / Touch Events
+    const onTouchStart = (e) => {
+      if (e.touches && e.touches.length > 0) {
+        setPosition(e.touches[0].clientX, e.touches[0].clientY);
+        if (ringRef.current) ringRef.current.classList.add('cursor-touch-active');
+      }
+    };
+
+    const onTouchMove = (e) => {
+      if (e.touches && e.touches.length > 0) {
+        setPosition(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    };
+
+    const onTouchEnd = () => {
+      if (ringRef.current) ringRef.current.classList.remove('cursor-touch-active');
+      // Gentle fade out when touch is lifted
+      setTimeout(() => {
+        isVisible = false;
+        if (dotRef.current) dotRef.current.style.opacity = '0';
+        if (ringRef.current) ringRef.current.style.opacity = '0';
+      }, 600);
     };
 
     const onMouseOver = (e) => {
@@ -65,7 +89,7 @@ const CustomCursor = () => {
     let animId;
     const render = () => {
       // Smooth lerp chasing for the ring
-      const ease = isHovering ? 0.25 : 0.18;
+      const ease = isHovering ? 0.28 : 0.2;
       ringX += (mouseX - ringX) * ease;
       ringY += (mouseY - ringY) * ease;
 
@@ -105,6 +129,12 @@ const CustomCursor = () => {
     window.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mouseup', onMouseUp);
 
+    // Touch listeners
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    window.addEventListener('touchend', onTouchEnd, { passive: true });
+    window.addEventListener('touchcancel', onTouchEnd, { passive: true });
+
     animId = requestAnimationFrame(render);
 
     return () => {
@@ -112,11 +142,13 @@ const CustomCursor = () => {
       window.removeEventListener('mouseover', onMouseOver);
       window.removeEventListener('mousedown', onMouseDown);
       window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
+      window.removeEventListener('touchcancel', onTouchEnd);
       cancelAnimationFrame(animId);
     };
   }, []);
-
-  if (isTouch) return null;
 
   return (
     <>
