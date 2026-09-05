@@ -13,58 +13,111 @@ const CustomCursor = () => {
     let isHovering = false;
     let hoverType = '';
     let isVisible = false;
+    let isTouching = false;
+    let isMouseDown = false;
+    let fadeTimeout = null;
 
-    const setPosition = (x, y) => {
-      mouseX = x;
-      mouseY = y;
-      if (!isVisible) {
-        isVisible = true;
-        if (dotRef.current) dotRef.current.style.opacity = '1';
-        if (ringRef.current) ringRef.current.style.opacity = '1';
-      }
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+    const clearFade = () => {
+      if (fadeTimeout) {
+        clearTimeout(fadeTimeout);
+        fadeTimeout = null;
       }
     };
 
     // Desktop Mouse Events
     const onMouseMove = (e) => {
-      setPosition(e.clientX, e.clientY);
+      clearFade();
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      if (!isVisible) {
+        isVisible = true;
+        ringX = mouseX;
+        ringY = mouseY;
+        if (dotRef.current) dotRef.current.style.opacity = '1';
+        if (ringRef.current) ringRef.current.style.opacity = '1';
+      }
+
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+      }
+    };
+
+    const onMouseLeave = () => {
+      clearFade();
+      isVisible = false;
+      if (dotRef.current) dotRef.current.style.opacity = '0';
+      if (ringRef.current) ringRef.current.style.opacity = '0';
     };
 
     const onMouseDown = () => {
+      isMouseDown = true;
       if (ringRef.current) ringRef.current.classList.add('cursor-clicked');
     };
 
     const onMouseUp = () => {
+      isMouseDown = false;
       if (ringRef.current) ringRef.current.classList.remove('cursor-clicked');
     };
 
     // Mobile / Touch Events
     const onTouchStart = (e) => {
       if (e.touches && e.touches.length > 0) {
-        setPosition(e.touches[0].clientX, e.touches[0].clientY);
-        if (ringRef.current) ringRef.current.classList.add('cursor-touch-active');
+        clearFade();
+        const touchX = e.touches[0].clientX;
+        const touchY = e.touches[0].clientY;
+
+        // Instantly snap ring and dot to touch location to prevent ANY swooping/jumping from top or off-screen!
+        mouseX = touchX;
+        mouseY = touchY;
+        ringX = touchX;
+        ringY = touchY;
+        isTouching = true;
+        isVisible = true;
+
+        if (dotRef.current) {
+          dotRef.current.style.opacity = '1';
+          dotRef.current.style.transform = `translate3d(${touchX}px, ${touchY}px, 0)`;
+        }
+        if (ringRef.current) {
+          ringRef.current.style.opacity = '1';
+          ringRef.current.style.transform = `translate3d(${touchX}px, ${touchY}px, 0) scale(1.2)`;
+          ringRef.current.classList.add('cursor-touch-active');
+        }
       }
     };
 
     const onTouchMove = (e) => {
       if (e.touches && e.touches.length > 0) {
-        setPosition(e.touches[0].clientX, e.touches[0].clientY);
+        clearFade();
+        isTouching = true;
+        mouseX = e.touches[0].clientX;
+        mouseY = e.touches[0].clientY;
+
+        if (dotRef.current) {
+          dotRef.current.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+        }
       }
     };
 
     const onTouchEnd = () => {
-      if (ringRef.current) ringRef.current.classList.remove('cursor-touch-active');
-      // Gentle fade out when touch is lifted
-      setTimeout(() => {
-        isVisible = false;
-        if (dotRef.current) dotRef.current.style.opacity = '0';
-        if (ringRef.current) ringRef.current.style.opacity = '0';
-      }, 600);
+      isTouching = false;
+      if (ringRef.current) {
+        ringRef.current.classList.remove('cursor-touch-active');
+      }
+      clearFade();
+      // Smooth fade out after finger is released
+      fadeTimeout = setTimeout(() => {
+        if (!isTouching) {
+          isVisible = false;
+          if (dotRef.current) dotRef.current.style.opacity = '0';
+          if (ringRef.current) ringRef.current.style.opacity = '0';
+        }
+      }, 700);
     };
 
     const onMouseOver = (e) => {
+      if (isTouching) return;
       const target = e.target;
       if (target.closest('.pro-project-card') || target.closest('.bento-tile') || target.closest('.degree-card')) {
         isHovering = true;
@@ -88,15 +141,23 @@ const CustomCursor = () => {
 
     let animId;
     const render = () => {
-      // Smooth lerp chasing for the ring
-      const ease = isHovering ? 0.28 : 0.2;
+      // Snappy and butter-smooth tracking: responsive on touch (0.42), smooth luxury on mouse
+      const ease = isTouching ? 0.42 : (isHovering ? 0.28 : 0.2);
       ringX += (mouseX - ringX) * ease;
       ringY += (mouseY - ringY) * ease;
 
       if (ringRef.current) {
-        ringRef.current.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+        const scale = isTouching
+          ? 1.2
+          : isMouseDown
+          ? 0.85
+          : isHovering
+          ? (hoverType === 'card' ? 1.4 : 1.25)
+          : 1;
 
-        if (isHovering) {
+        ringRef.current.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) scale(${scale})`;
+
+        if (isHovering && !isTouching) {
           if (hoverType === 'card') {
             ringRef.current.classList.add('cursor-card-hover');
             ringRef.current.classList.remove('cursor-link-hover');
@@ -128,6 +189,7 @@ const CustomCursor = () => {
     window.addEventListener('mouseover', onMouseOver, { passive: true });
     window.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mouseup', onMouseUp);
+    document.body.addEventListener('mouseleave', onMouseLeave);
 
     // Touch listeners
     window.addEventListener('touchstart', onTouchStart, { passive: true });
@@ -138,10 +200,12 @@ const CustomCursor = () => {
     animId = requestAnimationFrame(render);
 
     return () => {
+      clearFade();
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseover', onMouseOver);
       window.removeEventListener('mousedown', onMouseDown);
       window.removeEventListener('mouseup', onMouseUp);
+      document.body.removeEventListener('mouseleave', onMouseLeave);
       window.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('touchend', onTouchEnd);
